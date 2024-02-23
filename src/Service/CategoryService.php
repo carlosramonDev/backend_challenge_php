@@ -17,7 +17,7 @@ class CategoryService
         $query = "
             SELECT *
             FROM category c
-            WHERE c.company_id = {$this->getCompanyFromAdminUser($adminUserId)}
+            WHERE (c.company_id = {$this->getCompanyFromAdminUser($adminUserId)} OR c.company_id IS NULL)
         ";
 
         $stm = $this->pdo->prepare($query);
@@ -33,7 +33,7 @@ class CategoryService
             SELECT *
             FROM category c
             WHERE c.active = 1
-            AND c.company_id = {$this->getCompanyFromAdminUser($adminUserId)}
+            AND (c.company_id = {$this->getCompanyFromAdminUser($adminUserId)} OR c.company_id IS NULL)
             AND c.id = {$categoryId}
         ";
 
