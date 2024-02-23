@@ -45,16 +45,16 @@ Caso opte por usar o [Postman](https://www.postman.com/) o arquivo para importa�
 Abaixo, as solicitações do cliente:
 
 ### Categorias
-- [ ] A categoria está vindo errada na listagem de produtos para alguns casos
+- [X] A categoria está vindo errada na listagem de produtos para alguns casos
   (_exemplo: produto `blue trouser` está vindo na categoria `phone` e deveria ser `clothing`_);
-- [ ] Alguns produtos estão vindo com a categoria `null` ao serem pesquisados individualmente (_exemplo: produto `iphone 8`_);
-- [ ] Cadastrei o produto `king size bed` em mais de uma categoria, mas ele aparece **apenas** na categoria `furniture` na busca individual do produto.
+- [X] Alguns produtos estão vindo com a categoria `null` ao serem pesquisados individualmente (_exemplo: produto `iphone 8`_);
+- [X] Cadastrei o produto `king size bed` em mais de uma categoria, mas ele aparece **apenas** na categoria `furniture` na busca individual do produto.
 
 ### Filtros e Ordenamento
 Para a listagem de produtos:
-- [ ] Gostaria de poder filtrar os produtos ativos e inativos;
-- [ ] Gostaria de poder filtrar os produtos por categoria;
-- [ ] Gostaria de poder ordenar os produtos por data de cadastro.
+- [X] Gostaria de poder filtrar os produtos ativos e inativos;
+- [X] Gostaria de poder filtrar os produtos por categoria;
+- [X] Gostaria de poder ordenar os produtos por data de cadastro.
 
 ### Relatório
 - [ ] O relatório não está mostrando a coluna de logs corretamente, se possível, gostaria de trazer no seguinte formato:

@@ -18,7 +18,7 @@ class ProductService
             SELECT p.*, c.title as category
             FROM product p
             INNER JOIN product_category pc ON pc.product_id = p.id
-            INNER JOIN category c ON c.id = pc.id
+            INNER JOIN category c ON c.id = pc.cat_id
             WHERE p.company_id = {$adminUserId}
         ";
 
@@ -161,5 +161,31 @@ class ProductService
         $stm->execute();
 
         return $stm;
+    }
+    public function getAllFiltered($adminUserId, $filters)
+    {
+        $query = "
+            SELECT p.*, c.title as category
+            FROM product p
+            INNER JOIN product_category pc ON pc.product_id = p.id
+            INNER JOIN category c ON c.id = pc.cat_id
+            WHERE p.company_id = {$adminUserId}
+        ";
+
+        if (isset($filters['active'])) {
+        $query .= " AND p.active = {$filters['active']}";
+        }
+        if (isset($filters['category_id'])) {
+            $query .= " AND c.id = {$filters['category_id']}";
+        }
+        if (isset($filters['sort_by'])) {
+            $sortOrder = isset($filters['sort_order']) ? $filters['sort_order'] : 'ASC';
+            $query .= " ORDER BY {$filters['sort_by']} {$sortOrder}";
+        }
+        
+        $stm = $this->pdo->prepare($query);
+        $stm->execute();
+
+        return $stm->fetchAll();
     }
 }

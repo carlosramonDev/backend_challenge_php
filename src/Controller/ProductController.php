@@ -34,9 +34,14 @@ class ProductController
         $product = Product::hydrateByFetch($stm->fetch());
 
         $adminUserId = $request->getHeader('admin_user_id')[0];
-        $productCategory = $this->categoryService->getProductCategory($product->id)->fetch();
-        $fetchedCategory = $this->categoryService->getOne($adminUserId, $productCategory->id)->fetch();
-        $product->setCategory($fetchedCategory->title);
+        $productCategories = $this->categoryService->getProductCategory($product->id)->fetchAll();
+
+        $categoryTitles = [];
+        foreach ($productCategories as $productCategory) {
+            $fetchedCategory = $this->categoryService->getOne($adminUserId, $productCategory->id)->fetch();
+            $categoryTitles[] = $fetchedCategory->title;
+        }
+        $product->setCategory($categoryTitles);
 
         $response->getBody()->write(json_encode($product));
         return $response->withStatus(200);
@@ -75,5 +80,16 @@ class ProductController
         } else {
             return $response->withStatus(404);
         }
+    }
+
+    public function filterProducts(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface 
+    { 
+        $adminUserId = $request->getHeader('admin_user_id')[0];
+        $queryParams = $request->getQueryParams();
+
+        $filteredProducts = $this->service->getAllFiltered($adminUserId, $queryParams);
+
+        $response->getBody()->write(json_encode($filteredProducts));
+        return $response->withStatus(200);
     }
 }

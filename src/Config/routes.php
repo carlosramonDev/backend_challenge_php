@@ -17,11 +17,15 @@ $app->group('/companies', function (RouteCollectorProxy $group) {
 });
 
 $app->group('/products', function (RouteCollectorProxy $group) {
-    $group->get('', [ProductController::class, 'getAll']);
+    // $group->get('', [ProductController::class, 'getAll']);
     $group->get('/{id}', [ProductController::class, 'getOne']);
     $group->post('', [ProductController::class, 'insertOne']);
     $group->put('/{id}', [ProductController::class, 'updateOne']);
     $group->delete('/{id}', [ProductController::class, 'deleteOne']);
+
+    $group->get('', [ProductController::class, 'filterProducts']);
+    $group->get('/category/{categoryId}', [ProductController::class, 'filterProductsByCategory']);
+    $group->get('/sort/date', [ProductController::class, 'sortProductsByDate']);
 });
 
 $app->group('/categories', function (RouteCollectorProxy $group) {
