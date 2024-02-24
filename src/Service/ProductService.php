@@ -155,7 +155,8 @@ class ProductService
     {
         $stm = $this->pdo->prepare("
             SELECT *
-            FROM product_log
+            FROM product_log pl
+            INNER JOIN admin_user au ON au.id = pl.admin_user_id 
             WHERE product_id = {$id}
         ");
         $stm->execute();

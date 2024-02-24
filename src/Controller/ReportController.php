@@ -42,21 +42,27 @@ class ReportController
 
             $stm = $this->productService->getLog($product->id);
             $productLogs = $stm->fetchAll();
-            
+
+            $formattedLogs = [];
+            foreach ($productLogs as $log) {
+                $formattedLogs[] = "({$log->name}, {$log->action}, {$log->timestamp})";
+            }
+            $formattedLogsString = implode(',<br> ', $formattedLogs);
+
             $data[$i+1][] = $product->id;
             $data[$i+1][] = $companyName;
             $data[$i+1][] = $product->title;
             $data[$i+1][] = $product->price;
             $data[$i+1][] = $product->category;
             $data[$i+1][] = $product->created_at;
-            $data[$i+1][] = $productLogs;
+            $data[$i+1][] = $formattedLogsString;
         }
         
         $report = "<table style='font-size: 10px;'>";
         foreach ($data as $row) {
             $report .= "<tr>";
             foreach ($row as $column) {
-                $report .= "<td>{$column}</td>";
+                $report .= "<td><br>{$column}<br></td>";
             }
             $report .= "</tr>";
         }
