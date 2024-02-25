@@ -157,7 +157,7 @@ class ProductService
             SELECT *
             FROM product_log pl
             INNER JOIN admin_user au ON au.id = pl.admin_user_id 
-            WHERE product_id = {$id}
+            WHERE pl.product_id = {$id}
         ");
         $stm->execute();
 
@@ -189,4 +189,37 @@ class ProductService
 
         return $stm->fetchAll();
     }
+
+    public function getLastPriceChangeLog($productId)
+    {
+        $stm = $this->pdo->prepare("
+            SELECT pl.*, au.name as admin_user_name
+            FROM product_log pl
+            INNER JOIN admin_user au ON au.id = pl.admin_user_id
+            WHERE pl.product_id = {$productId}
+            AND pl.action = 'update'
+            ORDER BY pl.timestamp DESC
+            LIMIT 1
+        ");
+        $stm->execute();
+
+        return $stm->fetch();
+    }
+
+    public function getByName($productName, $adminUserId)
+    {
+        $query = "
+            SELECT p.*, c.title as category
+            FROM product p
+            INNER JOIN product_category pc ON pc.product_id = p.id
+            INNER JOIN category c ON c.id = pc.cat_id
+            WHERE p.company_id = {$adminUserId}
+            AND p.title = '{$productName}'
+        ";
+
+        $stm = $this->pdo->prepare($query);
+        $stm->execute();
+
+        return $stm->fetch();
+}
 }

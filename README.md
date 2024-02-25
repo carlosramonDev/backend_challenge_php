@@ -67,7 +67,7 @@ Para a listagem de produtos:
   (Joe Doe, Remoção, 21/12/2023 14:52:50)
 
 ### Logs
-- [ ] Gostaria de saber qual usuário mudou o preço do produto `iphone 8` por último.
+- [X] Gostaria de saber qual usuário mudou o preço do produto `iphone 8` por último.
 
 ### Extra
 - [ ] Aqui fica um desafio extra **opcional**: _criar um ambiente com_ Docker _para a api_.
@@ -82,3 +82,48 @@ Boa sorte! :)
 
 ## Suas Respostas, Duvidas e Observações
 [Adicione  aqui suas respostas, dúvidas e observações]
+
+
+# Solução das demandas Categorias
+  
+  # 01 Solução
+  A categoria está vindo errada:
+  (_exemplo: produto `blue trouser` está vindo na categoria `phone` e deveria ser `clothing`_);
+
+  A solução encontrada foi no método getAll de ProductService. Realizei uma mudança na busca sql para garantir a associação correta das categorias dos produtos, corrigindo a exibição incorreta de categorias na listagem de produtos para alguns casos.
+
+  # 02 Solução
+  Alguns produtos estão vindo com a categoria `null` ao serem pesquisados individualmente:
+  (_exemplo: produto `iphone 8`_);
+
+  Para corrigir a situação em que alguns produtos estavam vindo com a categoria null ao serem pesquisados individualmente, a solução foi ajustar as consultas no serviço de categoria (CategoryService). As alterações foram feitas nas consultas SQL para incluir categorias que não possuem uma empresa associada (company_id IS NULL). Isso garantiu que produtos sem uma categoria específica associada a uma empresa ainda fossem corretamente tratados, evitando o problema de categoria null ao pesquisar produtos individualmente.
+
+  # 03 Solução
+  Cadastrei o produto `king size bed` em mais de uma categoria, mas ele aparece **apenas** na categoria `furniture` na busca individual do produto.
+
+  Fiz alterações nas consultas SQL para incluir categorias que não possuem uma empresa associada (company_id IS NULL). Isso garantiu que produtos sem uma categoria específica associada a uma empresa ainda fossem corretamente tratados, evitando o problema de categoria null ao pesquisar produtos individualmente. O método getOne de ProductController foi tratado para atribuir corretamente as categorias associadas a um produto.
+
+  # Solução das demandas Filtros e Ordenamento
+  O relatório não está mostrando a coluna de logs corretamente, se possível, gostaria de trazer no seguinte formato:
+  (Nome do usuário, Tipo de alteração e Data).
+
+  Rotas:
+  Adicionei rota para filtrar os produtos com base nos parâmetros de consulta (query parameters). Foram incluídos filtros para produtos ativos/inativos, categoria específica e ordenamento por data de cadastro.
+
+  Métodos:
+  Um novo método filterProducts foi adicionado ao controlador de produtos para lidar com a lógica de filtragem e retorno dos resultados. No serviço de produtos (ProductService), o método getAllFiltered foi criado para construir a consulta SQL dinâmica com base nos filtros.
+
+  Fiz alterações na forma como os logs de produtos são formatados e incluídos no relatório para serem exibidos corretamente. Foram formatados como arrays e strings.
+  MOdifiquei a consulta de logs getLog na classe ProductService para incluir uma junção (INNER JOIN) com a tabela admin_user para exibir o nome do usuário.
+  Ex de params:
+  active: 1
+  category_id: 2
+  sort_by: 1
+
+  # Logs
+  Gostaria de saber qual usuário mudou o preço do produto `iphone 8` por último.
+
+  Adicionei melhorias nas classes ReportController e ProductService para aprimorar a geração de relatórios e identificar o último usuário que modificou o preço de um produto. As mudanças incluem a adição dos métodos formatLog no ReportController para formatação de logs, e getLastPriceChangeLog no ProductService para recuperar o último log de modificação de preço, incluindo o nome do usuário associado. 
+  Ex de params:
+  Kay: product_name
+  Value: iphone 8
